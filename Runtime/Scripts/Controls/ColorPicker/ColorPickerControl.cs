@@ -1,12 +1,31 @@
 ///Credit judah4
 ///Sourced from - http://forum.unity3d.com/threads/color-picker.267043/
 using System.Collections.Generic;
+using System.Linq;
 
 namespace UnityEngine.UI.Extensions.ColorPicker
 {
 	[ExecuteInEditMode]
 	public class ColorPickerControl : MonoBehaviour
 	{
+
+		[SerializeField] private SVBoxSlider _svBoxSlider = null;
+		private ColorSliderImage[] _sliderImages = null;
+        private void Awake()
+        {
+			_sliderImages = GetComponentsInChildren<ColorSliderImage>();
+        }
+        public void RefreshSliders()
+        {
+			_svBoxSlider.RegenerateSVTexture();
+			_svBoxSlider.SetSlider();
+
+			if (!_sliderImages.Any())
+				_sliderImages = GetComponentsInChildren<ColorSliderImage>();
+			foreach (var item in _sliderImages)
+				item.RegenerateTexture();
+        }
+
 		private float _hue = 0;
 		private float _saturation = 0;
 		private float _brightness = 0;
@@ -22,16 +41,16 @@ namespace UnityEngine.UI.Extensions.ColorPicker
 
 		[SerializeField]
 		bool hsvSlidersOn = true;
-
 		[SerializeField]
 		List<GameObject> hsvSliders = new List<GameObject>();
 
 		[SerializeField]
 		bool rgbSlidersOn = true;
-
 		[SerializeField]
 		List<GameObject> rgbSliders = new List<GameObject>();
 
+		[SerializeField]
+		bool alphaSliderOn = true;
 		[SerializeField]
 		GameObject alphaSlider = null;
 
@@ -42,8 +61,8 @@ namespace UnityEngine.UI.Extensions.ColorPicker
 			foreach (var item in hsvSliders)
 				item.SetActive(value);
 
-			if (alphaSlider)
-				alphaSlider.SetActive(hsvSlidersOn || rgbSlidersOn);
+			//if (alphaSlider)
+			//	alphaSlider.SetActive(hsvSlidersOn || rgbSlidersOn);
 		}
 
 		public void SetRGBSlidersOn(bool value)
@@ -52,20 +71,24 @@ namespace UnityEngine.UI.Extensions.ColorPicker
 			foreach (var item in rgbSliders)
 				item.SetActive(value);
 
-			if (alphaSlider)
-				alphaSlider.SetActive(hsvSlidersOn || rgbSlidersOn);
+			//if (alphaSlider)
+			//	alphaSlider.SetActive(hsvSlidersOn || rgbSlidersOn);
 		}
 
-
-		void Update()
+		public void SetAlphaSliderOn(bool value)
 		{
-#if UNITY_EDITOR
+			alphaSliderOn = value;
+			alphaSlider.SetActive(value);
+		}
+
+        private void OnValidate()
+        {
 			SetHSVSlidersOn(hsvSlidersOn);
 			SetRGBSlidersOn(rgbSlidersOn);
-#endif
+			SetAlphaSliderOn(alphaSliderOn);
 		}
 
-		public Color CurrentColor
+        public Color CurrentColor
 		{
 			get
 			{
