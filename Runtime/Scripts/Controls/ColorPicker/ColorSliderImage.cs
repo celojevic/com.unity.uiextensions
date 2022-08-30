@@ -113,7 +113,7 @@ namespace UnityEngine.UI.Extensions.ColorPicker
             }
         }
 
-        private void RegenerateTexture()
+        public void RegenerateTexture()
         {
             if (!picker)
             {

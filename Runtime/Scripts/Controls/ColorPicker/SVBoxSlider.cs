@@ -1,9 +1,9 @@
 ﻿///Credit judah4
 ///Sourced from - http://forum.unity3d.com/threads/color-picker.267043/
 
-
 namespace UnityEngine.UI.Extensions.ColorPicker
 {
+
     [RequireComponent(typeof(BoxSlider), typeof(RawImage)), ExecuteInEditMode()]
     public class SVBoxSlider : MonoBehaviour
     {
@@ -94,7 +94,7 @@ namespace UnityEngine.UI.Extensions.ColorPicker
             }
         }
 
-        private void RegenerateSVTexture()
+        public void RegenerateSVTexture()
         {
             double h = picker != null ? picker.H * 360 : 0;
 
@@ -118,5 +118,16 @@ namespace UnityEngine.UI.Extensions.ColorPicker
 
             image.texture = texture;
         }
+
+        /// <summary>
+        /// Sets the slider values according to the ColorPickerControl.
+        /// </summary>
+        public void SetSlider()
+        {
+            slider.NormalizedValueX = picker.S;
+            slider.NormalizedValueY = picker.V;
+        }
+
     }
+
 }
